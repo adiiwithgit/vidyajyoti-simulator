@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <title>Vidyajyoti 1U Satellite Explorer</title>
+    <style>
+        :root {
+            --pn: rgba(10, 16, 34, .84);
+            --bd: #26335c;
+            --tx: #e8edfb;
+            --mu: #93a0c0;
+            --ac: #5cc8ff;
+            --sun: #f5b83d;
+            --in: #16203f
+        }
+
+        * {
+            box-sizing: border-box
+        }
+
+        body {
+            margin: 0;
+            background: #04070f;
+            color: var(--tx);
+            font: 14px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+            overflow: hidden
+        }
+
+        #cv {
+            position: fixed;
+            inset: 0;
+            width: 100vw;
+            height: 100vh;
+            display: block;
+            touch-action: none;
+            cursor: grab
+        }
+
+        .pn {
+            position: fixed;
+            background: var(--pn);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid var(--bd);
+            border-radius: 12px
+        }
+
+        #ttl {
+            left: 16px;
+            top: 14px;
+            padding: 8px 14px
+        }
+
+        #ttl b {
+            font-size: 16px
+        }
+
+        #ttl small {
+            display: block;
+            color: var(--mu);
+            font-size: 12px
+        }
+
+        #side {
+            left: 16px;
+            top: 84px;
+            width: 230px;
+            padding: 8px;
+            max-height: calc(100vh - 160px);
+            overflow: auto
+        }
+
+        #side h3 {
+            font-size: 12px;
+            color: var(--mu);
+            font-weight: 500;
+            margin: 8px 6px 4px
+        }
+
+        .it {
+            display: block;
+            width: 100%;
+            text-align: left;
+            background: none;
+            color: var(--tx);
+            border: 0;
+            border-left: 3px solid var(--ac);
+            border-radius: 4px;
+            padding: 6px 9px;
+            margin: 2px 0;
+            font: inherit;
+            cursor: pointer
+        }
+
+        .it.e {
+            border-color: var(--sun)
+        }
+
+        .it small {
+            display: block;
+            color: var(--mu);
+            font-size: 12px
+        }
+
+        .it:hover,
+        .it.on {
+            background: var(--in)
+        }
+
+        #card {
+            right: 16px;
+            top: 14px;
+            width: 340px;
+            max-height: calc(100vh - 100px);
+            overflow: auto;
+            padding: 14px 16px
+        }
+
+        #card h2 {
+            margin: 6px 0 6px;
+            font-size: 19px
+        }
+
+        #card h3 {
+            font-size: 14px;
+            margin: 12px 0 4px
+        }
+
+        #card p {
+            margin: 6px 0
+        }
+
+        #card ul {
+            margin: 8px 0;
+            padding-left: 18px
+        }
+
+        .mu {
+            color: var(--mu)
+        }
+
+        .tag {
+            font-size: 12px;
+            color: var(--ac);
+            border: 1px solid var(--ac);
+            border-radius: 10px;
+            padding: 1px 9px
+        }
+
+        .tag.e {
+            color: var(--sun);
+            border-color: var(--sun)
+        }
+
+        .lk {
+            background: none;
+            border: 0;
+            color: var(--ac);
+            font: inherit;
+            padding: 0;
+            cursor: pointer;
+            text-decoration: underline
+        }
+
+        .try {
+            background: var(--in);
+            border-radius: 8px;
+            padding: 10px;
+            margin: 10px 0
+        }
+
+        .try input {
+            width: 100%;
+            accent-color: var(--ac)
+        }
+
+        #to {
+            font-weight: 600
+        }
+
+        button {
+            font: inherit;
+            color: var(--tx);
+            background: var(--in);
+            border: 1px solid var(--bd);
+            border-radius: 8px;
+            padding: 7px 12px;
+            cursor: pointer
+        }
+
+        button:focus-visible {
+            outline: 2px solid var(--ac);
+            outline-offset: 2px
+        }
+
+        button[aria-pressed="true"] {
+            background: var(--ac);
+            color: #04101f;
+            border-color: var(--ac);
+            font-weight: 600
+        }
+
+        #ctl {
+            left: 50%;
+            transform: translateX(-50%);
+            bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+            display: flex;
+            gap: 8px;
+            padding: 8px;
+            white-space: nowrap
+        }
+
+        #tip {
+            pointer-events: none;
+            padding: 3px 10px;
+            font-size: 13px;
+            display: none
+        }
+
+        @media(max-width:760px) {
+            #side {
+                top: auto;
+                bottom: 70px;
+                left: 8px;
+                right: 8px;
+                width: auto;
+                display: flex;
+                overflow-x: auto;
+                max-height: none;
+                gap: 4px
+            }
+
+            #side h3 {
+                display: none
+            }
+
+            .it {
+                min-width: 140px
+            }
+
+            #card {
+                left: 8px;
+                right: 8px;
+                top: 64px;
+                width: auto;
+                max-height: 36vh
+            }
+
+            #ttl {
+                left: 8px;
+                top: 8px
+            }
+
+            #ctl {
+                bottom: 8px;
+                max-width: calc(100vw - 16px);
+                overflow-x: auto
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="cv"></canvas>
+    <div class="pn" id="ttl"><b>Vidyajyoti 1U CubeSat Explorer</b><small>Drag to rotate · scroll or pinch to zoom ·
+            click a part</small></div>
+    <div class="pn" id="side"></div>
+    <div class="pn" id="card"></div>
+    <div class="pn" id="ctl"><button id="bOv">Full satellite</button><button id="bEx" aria-pressed="false">Explode
+            stack</button><button id="bEp" aria-pressed="false">EPS focus</button><button id="bAu"
+            aria-pressed="true">Auto-orbit</button></div>
+    <div class="pn" id="tip"></div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
+        if (!window.THREE) { document.body.innerHTML = '<p style="padding:24px">Could not load three.js from the CDN. Check your internet connection and reload.</p>'; throw 0 }
+        const $ = i => document.getElementById(i), V = THREE.Vector3, TAU = Math.PI * 2, clamp = (v, a, b) => Math.min(b, Math.max(a, v)), near = (a, b) => a - Math.round((a - b) / TAU) * TAU;
+        const PARTS = {
+            sol: { n: 'Solar array', t: 'EPS · generation', e: 1, a: [1, 0, 0], v: [.6, 1, 4.2], d: 'A 1U face is only 10 × 10 cm, so body-mounted cells give about 1.5 W on average. Two deployable wings add area that can face the Sun. Output follows the cosine of the angle between the Sun and the panel normal.', sp: ['Cell efficiency about 29.5% (triple-junction GaAs)', 'Body panels: about 1.5 W orbit-average', 'Two 10 × 10 cm wings: about 6.5 W peak facing the Sun', 'Design risks: hinge reliability and pointing'], tr: { l: 'Sun angle to panel normal', u: '°', min: 0, max: 89, v: 0, s: 1, f: v => 'Wings output ' + (6.5 * Math.cos(v * Math.PI / 180)).toFixed(1) + ' W' } },
+            eps: { n: 'EPS board', t: 'EPS · conditioning and distribution', e: 1, int: 1, w: .1, a: [0, 0, 0], v: [.5, .95, 2.2], d: 'The power brain. An MPPT converter holds the panels at their best operating point, regulators make the 3.3 V and 5 V rails, and protection circuits guard the battery against over-charge, over-discharge and short circuits.', sp: ['MPPT efficiency about 95%', 'Rails: 3.3 V, 5 V and battery-direct', 'Protection: under/over-voltage and over-current', 'Own draw about 0.1 W'], tr: { l: 'Solar input', u: ' W', min: 0, max: 7, v: 3, s: .5, f: v => `Bus gets ${(v * .95).toFixed(2)} W, MPPT loses ${(v * .05).toFixed(2)} W` } },
+            bat: { n: 'Battery pack', t: 'EPS · storage', e: 1, int: 1, a: [0, 0, 0], v: [.6, 1.05, 2.2], d: 'Two Li-ion 18650 cells in series (7.4 V nominal). The pack carries the whole satellite through eclipse, about 35 minutes of every 95-minute orbit, so it cycles roughly 15 times a day. A 1U has room for very little battery, so keeping depth of discharge low matters even more.', sp: ['About 20 Wh for the whole 1U', 'Target depth of discharge under 30%', 'About 15 charge cycles per day in LEO', 'Cells need heaters: charging below 0 °C damages them'], tr: { l: 'Average load', u: ' W', min: .5, max: 5, v: 2, s: .25, f: v => { const e = v * 35 / 60; return `Eclipse uses ${e.toFixed(2)} Wh, depth of discharge ${(e / 20 * 100).toFixed(0)}%` } } },
+            obc: { n: 'Flight computer (OBC)', t: 'Command and data handling', int: 1, w: .3, a: [0, 0, 0], v: [.5, .95, 2.2], d: 'The brain. Runs the flight software, schedules tasks, stores telemetry in flash and talks to every board over I²C, SPI and UART. A watchdog timer reboots it if radiation flips a bit and it hangs.', sp: ['ARM Cortex-M class microcontroller', 'Draws about 0.3 W', 'Watchdog timer and safe-mode logic', 'Reads EPS telemetry and sheds loads when charge is low'] },
+            com: { n: 'Radio and antenna', t: 'Communications', int: 1, w: .5, a: [.2, .2, .7], v: [.6, 1.1, 3.8], d: 'A UHF radio and whip antenna link the satellite to the ground station. A pass lasts only 8 to 10 minutes, so data is queued and sent in bursts. The 17 cm whip is longer than the whole satellite and stays folded until deployment.', sp: ['Typical 437 MHz amateur band, 9.6 kbps', 'Idle about 0.3 W, transmit 2 W', 'Quarter-wave whip, about 17 cm, deploys after launch', 'Transmit duty cycle sets average power'], tr: { l: 'Transmit duty', u: '%', min: 0, max: 100, v: 10, s: 1, f: v => `Average draw ${(.3 + 1.7 * v / 100).toFixed(2)} W` } },
+            adcs: { n: 'Reaction wheels and sensors', t: 'Attitude control (ADCS)', int: 1, w: .5, a: [0, 0, 0], v: [.6, .95, 2.2], d: 'Three tiny spinning wheels turn the satellite by trading angular momentum with it. A magnetorquer coil pushes against Earth’s magnetic field to detumble after deployment and to unload the wheels. Many 1U satellites fly with magnetorquers only.', sp: ['3 miniature reaction wheels, one per axis', 'Magnetorquer coil for detumbling', 'Sun sensors and magnetometer on the faces', 'Draws about 0.5 W'] },
+            pay: { n: 'Camera payload', t: 'Payload', int: 1, w: .6, a: [0, 0, -.15], v: [3.54, 1.2, 2.4], d: 'The reason the mission exists. This concept uses a small Earth-observation camera. In a 1U it is a large share of the power budget, so imaging is scheduled for sunlit passes when the battery is full.', sp: ['Draws about 0.6 W, 1.5 W in burst', 'Data volume is limited by downlink time', 'Pointing accuracy comes from the ADCS', 'Replace this block with your own instrument'] },
+            str: { n: 'Structure', t: 'Frame and rails', a: [0, 0, 0], v: [.8, 1.2, 5.5], d: 'Anodized aluminum rails carry launch loads and slide out of the deployer. A 1U CubeSat is a 10 cm cube, and the rails must meet the CubeSat Design Specification so any launcher can fly it.', sp: ['1U: 10 × 10 × 10 cm, up to about 2 kg', 'Aluminum 6061 or 7075, hard anodized', 'Deployment switches and a remove-before-flight pin keep it powered off until release'] }
+        };
+        const ORDER = ['sol', 'eps', 'bat', 'obc', 'com', 'adcs', 'pay', 'str'];
+        /* ---------- scene ---------- */
+        const cv = $('cv'), rd = new THREE.WebGLRenderer({ canvas: cv, antialias: true }), scene = new THREE.Scene(), cam3 = new THREE.PerspectiveCamera(45, 1, .1, 2000);
+        rd.setPixelRatio(Math.min(devicePixelRatio, 2)); rd.outputEncoding = THREE.sRGBEncoding;
+        function rs() { rd.setSize(innerWidth, innerHeight, false); cam3.aspect = innerWidth / innerHeight; cam3.updateProjectionMatrix() } addEventListener('resize', rs); rs();
+        scene.add(new THREE.AmbientLight(0x8fa4d0, .55));
+        const sun = new THREE.DirectionalLight(0xfff4e0, 1.7); sun.position.set(30, 20, 25); scene.add(sun);
+        const rim = new THREE.DirectionalLight(0x4a78c8, .6); rim.position.set(-20, -5, -20); scene.add(rim);
+        {
+            const p = []; for (let i = 0; i < 1800; i++) { const u = Math.random() * 2 - 1, a = Math.random() * TAU, s = Math.sqrt(1 - u * u); p.push(900 * s * Math.cos(a), 900 * u, 900 * s * Math.sin(a)) }
+            const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.Float32BufferAttribute(p, 3)); scene.add(new THREE.Points(g, new THREE.PointsMaterial({ size: 1.5, color: 0xffffff, sizeAttenuation: false })))
+        }
+        function earthTex() {
+            const c = document.createElement('canvas'); c.width = 1024; c.height = 512; const x = c.getContext('2d'); let s = 7; const R = () => (s = (s * 16807) % 2147483647) / 2147483647;
+            const g = x.createLinearGradient(0, 0, 0, 512); g.addColorStop(0, '#0e3a86'); g.addColorStop(.5, '#1565c0'); g.addColorStop(1, '#0e3a86'); x.fillStyle = g; x.fillRect(0, 0, 1024, 512);
+            for (let i = 0; i < 16; i++) { x.fillStyle = R() < .5 ? '#2e7d32' : '#8d7b4a'; x.beginPath(); const cx = R() * 1024, cy = 80 + R() * 350; for (let k = 0; k < 9; k++) { const a = k / 9 * TAU, r = 30 + R() * 60; x.lineTo(cx + Math.cos(a) * r * 1.6, cy + Math.sin(a) * r) } x.closePath(); x.fill() }
+            x.fillStyle = 'rgba(255,255,255,.35)'; for (let i = 0; i < 70; i++) { x.beginPath(); x.ellipse(R() * 1024, R() * 512, 20 + R() * 50, 6 + R() * 10, 0, 0, TAU); x.fill() }
+            const t = new THREE.CanvasTexture(c); t.encoding = THREE.sRGBEncoding; return t
+        }
+        const earth = new THREE.Mesh(new THREE.SphereGeometry(190, 64, 48), new THREE.MeshStandardMaterial({ map: earthTex(), roughness: .9, metalness: 0 })); earth.position.set(0, -210, -90); scene.add(earth);
+        const atm = new THREE.Mesh(new THREE.SphereGeometry(194, 48, 32), new THREE.MeshBasicMaterial({ color: 0x4aa3ff, transparent: true, opacity: .14, side: THREE.BackSide })); atm.position.copy(earth.position); scene.add(atm);
+        function cellTex(nx, ny) {
+            const c = document.createElement('canvas'); c.width = 64 * nx; c.height = 64 * ny; const x = c.getContext('2d'); x.fillStyle = '#0b1f4d'; x.fillRect(0, 0, c.width, c.height); x.strokeStyle = '#6f8fd0'; x.lineWidth = 2;
+            for (let i = 0; i <= nx; i++) { x.beginPath(); x.moveTo(i * 64, 0); x.lineTo(i * 64, c.height); x.stroke() } for (let j = 0; j <= ny; j++) { x.beginPath(); x.moveTo(0, j * 64); x.lineTo(c.width, j * 64); x.stroke() }
+            x.strokeStyle = '#caa24a'; x.strokeRect(1, 1, c.width - 2, c.height - 2); const t = new THREE.CanvasTexture(c); t.encoding = THREE.sRGBEncoding; t.anisotropy = 4; return t
+        }
+        /* ---------- satellite (1U: 10 x 10 x 10 cm) ---------- */
+        const B = (w, h, d, m) => new THREE.Mesh(new THREE.BoxGeometry(w, h, d), m);
+        const Cy = (r, l, m, ax) => { const o = new THREE.Mesh(new THREE.CylinderGeometry(r, r, l, 24), m); if (ax === 'z') o.rotation.x = Math.PI / 2; if (ax === 'x') o.rotation.z = Math.PI / 2; return o };
+        const M = (c, r = .5, m = .3, t) => { const x = new THREE.MeshStandardMaterial({ color: c, roughness: r, metalness: m }); if (t != null) { x.transparent = true; x.opacity = t; x.depthWrite = false } x.userData.op = t == null ? 1 : t; return x };
+        const sat = new THREE.Group(); scene.add(sat); const grp = {}, skin = [], bodyCells = [];
+        function reg(id, z, ez, g) { g.position.z = z; g.userData = { id, z, ez }; g.traverse(o => { if (o.isMesh) o.userData.part = id }); const a = new THREE.Object3D(); a.position.set(...PARTS[id].a); g.add(a); g.userData.anchor = a; sat.add(g); grp[id] = g }
+        function board(col, chips, seed) {
+            const g = new THREE.Group(); g.add(B(.92, .92, .05, M(col, .6, .1))); let s = seed; const R = () => (s = (s * 16807) % 2147483647) / 2147483647;
+            chips.forEach(([c, n, w]) => { for (let i = 0; i < n; i++) { const d = .03 + R() * .03, k = B(w * (.6 + R() * .8), w * (.6 + R() * .8), d, M(c, .4, .5)); k.position.set((R() - .5) * .7, (R() - .5) * .7, .025 + d / 2); g.add(k) } }); return g
+        }
+        function wheel(ax) { const g = new THREE.Group(), t = new THREE.Mesh(new THREE.TorusGeometry(.2, .055, 12, 28), M(0xd9822b, .4, .7)), h = Cy(.07, .12, M(0xb7bfcc, .4, .8), ax); if (ax === 'x') t.rotation.y = Math.PI / 2; if (ax === 'y') t.rotation.x = Math.PI / 2; g.add(t, h); g.scale.setScalar(.5); return g }
+        {
+            const g = new THREE.Group(); g.add(B(.7, .7, .2, M(0x4a5468, .5, .5))); const l = Cy(.2, .15, M(0x20242e, .4, .7), 'z'); l.position.z = -.17; g.add(l);
+            const gl = Cy(.15, .03, M(0x1b4f9c, .1, .9), 'z'); gl.position.z = -.25; g.add(gl); const rg = new THREE.Mesh(new THREE.TorusGeometry(.2, .025, 8, 24), M(0xc0c6d4, .3, .9)); rg.position.z = -.24; g.add(rg); reg('pay', -.4, -2.75, g)
+        }
+        {
+            const g = new THREE.Group(), pl = B(.92, .92, .03, M(0x8a93a3, .5, .7)); pl.position.z = -.11; g.add(pl);[['z', -.22, .2], ['x', .22, .2], ['y', 0, -.2]].forEach(([ax, x, y]) => { const w = wheel(ax); w.position.set(x, y, 0); g.add(w) });
+            const q = B(.8, .05, .05, M(0xb5651d, .5, .5)); q.position.set(0, .43, 0); g.add(q); reg('adcs', -.15, -1.65, g)
+        }
+        {
+            const g = new THREE.Group(), cm = M(0x2f9e6b, .5, .4);[-1, 1].forEach(b => { const c = Cy(.09, .65, cm, 'x'); c.position.set(0, b * .1, 0); g.add(c);[-1, 1].forEach(e => { const cap = Cy(.05, .02, M(0xd0d4dc, .3, .9), 'x'); cap.position.set(e * .335, b * .1, 0); g.add(cap) }) });
+            const h = B(.8, .5, .02, M(0x30343f, .6, .4)); h.position.z = -.1; g.add(h); reg('bat', .04, -.55, g)
+        }
+        reg('eps', .2, .55, board(0x187a45, [[0xf5b83d, 6, .18], [0x2b2f3a, 4, .15], [0xb8bec9, 3, .14]], 11));
+        reg('obc', .32, 1.65, board(0x1d5fa8, [[0x15171d, 2, .28], [0xc9ced8, 5, .1]], 23));
+        { const g = board(0x6a3fa0, [[0x15171d, 1, .22], [0xc9ced8, 5, .12]], 37), ant = Cy(.02, 1.7, M(0xdde2ea, .3, .9), 'z'); ant.position.set(.38, .38, .94); g.add(ant); const bs = B(.1, .1, .08, M(0x30343f)); bs.position.set(.38, .38, .09); g.add(bs); reg('com', .44, 2.75, g) }
+        {
+            const g = new THREE.Group(), rm = M(0xaab3c2, .35, .9);[[-1, -1], [1, -1], [-1, 1], [1, 1]].forEach(([a, b]) => { const r = B(.08, .08, 1, rm); r.position.set(a * .5, b * .5, 0); g.add(r) });
+            [-.5, .5].forEach(z => [-.5, .5].forEach(v => { const h = B(1, .08, .08, rm); h.position.set(0, v, z); g.add(h); const w = B(.08, 1, .08, rm); w.position.set(v, 0, z); g.add(w) })); reg('str', 0, 0, g)
+        }
+        {
+            const g = new THREE.Group(), mw = new THREE.MeshStandardMaterial({ map: cellTex(3, 3), roughness: .35, metalness: .6 }), mb = new THREE.MeshStandardMaterial({ map: cellTex(3, 3), roughness: .35, metalness: .6 }), hm = M(0xaab3c2, .4, .9); mw.userData.op = 1; mb.userData.op = 1;
+            [-1, 1].forEach(s => { const p = B(1, .03, .95, mw); p.position.x = s * 1.02; g.add(p); const h = Cy(.03, .95, hm, 'z'); h.position.x = s * .5; g.add(h); const y = B(.9, .02, .9, mb); y.position.y = s * .52; g.add(y); bodyCells.push(y) }); reg('sol', 0, 0, g)
+        }
+        [-1, 1].forEach(s => { const p = B(.01, 1, 1, M(0x9db4d8, .2, .1, .18)); p.position.x = s * .5; sat.add(p); skin.push(p) });
+        const hit = []; sat.traverse(o => { if (o.isMesh && o.userData.part) hit.push(o) });
+        /* ---------- camera state ---------- */
+        const cam = { t: new V(), r: 7.5, th: .9, ph: 1.25 }, goal = { t: new V(), r: 7.5, th: .9, ph: 1.25 };
+        let sel = null, hov = null, expWant = 0, ex = 0, epsOnly = false, auto = true, pressed = false, moved = 0, last = 0;
+        function setView() { if (sel) { const v = PARTS[sel].v; goal.th = near(v[0], cam.th); goal.ph = v[1]; goal.r = v[2] } else { goal.t.set(0, 0, 0); goal.r = expWant ? 13 : 7.5 } }
+        function select(id) { sel = id; if (id && PARTS[id].int) expWant = 1; if (!id) expWant = 0; setView(); ui() }
+        const tot = ORDER.reduce((a, k) => a + (PARTS[k].w || 0), 0).toFixed(1);
+        function ui() {
+            $('bEx').setAttribute('aria-pressed', !!expWant); $('bEp').setAttribute('aria-pressed', epsOnly); $('bAu').setAttribute('aria-pressed', auto);
+            document.querySelectorAll('.it').forEach(b => b.classList.toggle('on', b.dataset.id === sel));
+            const c = $('card');
+            if (!sel) { c.innerHTML = `<span class="tag">Full satellite</span><h2>Vidyajyoti 1U CubeSat</h2><p class="mu">1U concept model, 10 × 10 × 10 cm. Click any part, pick one from the list, or turn on EPS focus to isolate the power system.</p><h3>Power chain</h3><p>Sun → <button class="lk" data-id="sol">solar array</button> → <button class="lk" data-id="eps">EPS board</button> → <button class="lk" data-id="bat">battery</button> → loads: <button class="lk" data-id="obc">OBC</button>, <button class="lk" data-id="com">radio</button>, <button class="lk" data-id="adcs">ADCS</button>, <button class="lk" data-id="pay">payload</button>.</p><p class="mu">Nominal loads add up to ${tot} W. Body panels give about 1.5 W on average, wings up to 6.5 W at peak.</p>`; return }
+            const p = PARTS[sel];
+            c.innerHTML = `<span class="tag ${p.e ? 'e' : ''}">${p.t}</span><h2>${p.n}</h2><p>${p.d}</p><ul>${p.sp.map(x => `<li>${x}</li>`).join('')}</ul>${p.tr ? `<div class="try"><label>${p.tr.l}: <b id="tv"></b></label><input id="tr" type="range" min="${p.tr.min}" max="${p.tr.max}" step="${p.tr.s}" value="${p.tr.v}"><div id="to"></div></div>` : ''}<button id="back">Back to full satellite</button>`;
+            if (p.tr) { const u = () => { const v = +$('tr').value; $('tv').textContent = v + p.tr.u; $('to').textContent = p.tr.f(v) }; $('tr').oninput = u; u() } $('back').onclick = () => select(null)
+        }
+        $('side').innerHTML = '<h3>EPS, the power system</h3>' + ORDER.map(k => { const p = PARTS[k]; return (k === 'obc' ? '<h3>Other subsystems</h3>' : '') + `<button class="it ${p.e ? 'e' : ''}" data-id="${k}">${p.n}<small>${p.t}</small></button>` }).join('');
+        document.addEventListener('click', e => { const t = e.target.closest('[data-id]'); if (t) select(t.dataset.id) });
+        $('bOv').onclick = () => select(null);
+        $('bEx').onclick = () => { expWant = expWant ? 0 : 1; if (!sel) goal.r = expWant ? 13 : 7.5; ui() };
+        $('bEp').onclick = () => { epsOnly = !epsOnly; dim(); ui() };
+        $('bAu').onclick = () => { auto = !auto; ui() };
+        addEventListener('keydown', e => { if (e.key === 'Escape') select(null) });
+        function dim() { for (const id in grp) { const d = epsOnly && !PARTS[id].e; grp[id].traverse(o => { if (o.isMesh) { const m = o.material, op = d ? .08 : m.userData.op; m.opacity = op; m.transparent = op < 1; m.depthWrite = op >= 1; m.needsUpdate = true } }) } }
+        function hl() { for (const id in grp) { const v = id === sel ? .45 : id === hov ? .3 : 0, g = grp[id]; if (g.userData.h !== v) { g.userData.h = v; g.traverse(o => { if (o.isMesh) o.material.emissive.setRGB(v * .3, v * .6, v) }) } } }
+        /* ---------- input ---------- */
+        const ray = new THREE.Raycaster(), mp = new THREE.Vector2(), ptrs = new Map(); let pd = 0;
+        function pick(e) {
+            const r = cv.getBoundingClientRect(); mp.set((e.clientX - r.left) / r.width * 2 - 1, -(e.clientY - r.top) / r.height * 2 + 1); ray.setFromCamera(mp, cam3);
+            const h = ray.intersectObjects(hit.filter(o => o.visible && o.material.opacity > .2), false)[0]; return h ? h.object.userData.part : null
+        }
+        cv.addEventListener('pointerdown', e => { cv.setPointerCapture(e.pointerId); ptrs.set(e.pointerId, { x: e.clientX, y: e.clientY }); pressed = true; moved = 0; if (ptrs.size === 2) { const [a, b] = [...ptrs.values()]; pd = Math.hypot(a.x - b.x, a.y - b.y) } });
+        cv.addEventListener('pointermove', e => {
+            const p = ptrs.get(e.pointerId);
+            if (p) {
+                const dx = e.clientX - p.x, dy = e.clientY - p.y; p.x = e.clientX; p.y = e.clientY;
+                if (ptrs.size === 1) { moved += Math.abs(dx) + Math.abs(dy); goal.th -= dx * .006; goal.ph = clamp(goal.ph - dy * .006, .2, 2.1) }
+                else if (ptrs.size === 2) { const [a, b] = [...ptrs.values()], d = Math.hypot(a.x - b.x, a.y - b.y); if (pd) goal.r = clamp(goal.r * pd / d, 1, 25); pd = d; moved = 99 }
+            }
+            else { hov = pick(e); cv.style.cursor = hov ? 'pointer' : 'grab'; const t = $('tip'); if (hov) { t.style.display = 'block'; t.textContent = PARTS[hov].n; t.style.left = e.clientX + 14 + 'px'; t.style.top = e.clientY + 14 + 'px' } else t.style.display = 'none' }
+        });
+        function up(e) {
+            const was = ptrs.has(e.pointerId); ptrs.delete(e.pointerId); if (ptrs.size < 2) pd = 0; if (!ptrs.size) pressed = false;
+            if (was && e.type === 'pointerup' && moved < 6) { const id = pick(e); if (id) select(id) }
+        }
+        cv.addEventListener('pointerup', up); cv.addEventListener('pointercancel', up); cv.addEventListener('pointerleave', () => { hov = null; $('tip').style.display = 'none' });
+        cv.addEventListener('wheel', e => { e.preventDefault(); goal.r = clamp(goal.r * Math.exp(e.deltaY * .001), 1, 25) }, { passive: false });
+        /* ---------- loop ---------- */
+        function loop(t) {
+            const dt = Math.min(.05, (t - last) / 1000 || 0); last = t;
+            ex += (expWant - ex) * (1 - Math.exp(-dt * 3));
+            for (const id in grp) { const u = grp[id].userData; grp[id].position.z = u.z + (u.ez - u.z) * ex }
+            const sk = ex < .3; skin.forEach(s => s.visible = sk); bodyCells.forEach(s => s.visible = sk);
+            if (sel) goal.t.copy(grp[sel].userData.anchor.getWorldPosition(new V())); else if (auto && !pressed) goal.th += dt * .15;
+            const k = 1 - Math.exp(-dt * 4); cam.t.lerp(goal.t, k); cam.r += (goal.r - cam.r) * k; cam.th += (goal.th - cam.th) * k; cam.ph += (goal.ph - cam.ph) * k;
+            const s = Math.sin(cam.ph); cam3.position.set(cam.t.x + cam.r * s * Math.sin(cam.th), cam.t.y + cam.r * Math.cos(cam.ph), cam.t.z + cam.r * s * Math.cos(cam.th)); cam3.lookAt(cam.t);
+            earth.rotation.y += dt * .01; hl(); rd.render(scene, cam3); requestAnimationFrame(loop)
+        }
+        ui(); requestAnimationFrame(loop);
+    </script>
+</body>
+
+</html>
