@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Vidyajyoti Satellite Simulator</title>
+  <style>
+    :root {
+      --bg: #eef1f8;
+      --cd: #fff;
+      --tx: #0e1630;
+      --mu: #59627a;
+      --bd: #d5dbea;
+      --ac: #1d6fd6;
+      --sun: #c98200;
+      --ok: #14804f;
+      --bad: #d0392c;
+      --in: #e6ebf6;
+      box-sizing: border-box;
+      padding-top: env(safe-area-inset-top, 0px);
+      padding-bottom: env(safe-area-inset-bottom, 0px)
+    }
+
+    @media(prefers-color-scheme:dark) {
+      :root:not([data-theme="light"]) {
+        --bg: #070b16;
+        --cd: #0f1730;
+        --tx: #e8edfb;
+        --mu: #8e9ab8;
+        --bd: #222d4d;
+        --ac: #5cc8ff;
+        --sun: #f5b83d;
+        --ok: #3ddc97;
+        --bad: #ff6b5e;
+        --in: #16203f
+      }
+    }
+
+    :root[data-theme="dark"] {
+      --bg: #070b16;
+      --cd: #0f1730;
+      --tx: #e8edfb;
+      --mu: #8e9ab8;
+      --bd: #222d4d;
+      --ac: #5cc8ff;
+      --sun: #f5b83d;
+      --ok: #3ddc97;
+      --bad: #ff6b5e;
+      --in: #16203f
+    }
+
+    html {
+      scroll-padding-top: env(safe-area-inset-top, 0px)
+    }
+
+    * {
+      box-sizing: border-box
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--tx);
+      font: 15px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      font-variant-numeric: tabular-nums
+    }
+
+    header {
+      padding: 18px 20px 8px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: baseline;
+      justify-content: space-between
+    }
+
+    h1 {
+      font-size: 22px;
+      margin: 0;
+      letter-spacing: .2px
+    }
+
+    h1 small {
+      display: block;
+      font-size: 13px;
+      font-weight: 400;
+      color: var(--mu)
+    }
+
+    nav {
+      display: flex;
+      gap: 6px
+    }
+
+    button,
+    select {
+      font: inherit;
+      color: var(--tx);
+      background: var(--in);
+      border: 1px solid var(--bd);
+      border-radius: 8px;
+      padding: 7px 13px;
+      cursor: pointer
+    }
+
+    button:focus-visible,
+    input:focus-visible,
+    select:focus-visible {
+      outline: 2px solid var(--ac);
+      outline-offset: 2px
+    }
+
+    nav button[aria-selected="true"] {
+      background: var(--ac);
+      color: #04101f;
+      border-color: var(--ac);
+      font-weight: 600
+    }
+
+    .app {
+      display: grid;
+      grid-template-columns: 270px 1fr;
+      gap: 16px;
+      padding: 8px 20px 28px;
+      max-width: 1280px;
+      margin: auto
+    }
+
+    @media(max-width:860px) {
+      .app {
+        grid-template-columns: 1fr
+      }
+    }
+
+    aside,
+    .box {
+      background: var(--cd);
+      border: 1px solid var(--bd);
+      border-radius: 12px;
+      padding: 14px
+    }
+
+    aside label {
+      display: block;
+      margin: 10px 0 2px;
+      font-size: 13px;
+      color: var(--mu)
+    }
+
+    aside label b {
+      float: right;
+      color: var(--tx);
+      font-weight: 600
+    }
+
+    input[type=range] {
+      width: 100%;
+      accent-color: var(--ac)
+    }
+
+    .row {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px
+    }
+
+    .row button {
+      flex: 1
+    }
+
+    h2 {
+      font-size: 15px;
+      margin: 0 0 8px
+    }
+
+    .v {
+      display: none
+    }
+
+    .v.on {
+      display: block
+    }
+
+    .kpis {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 8px;
+      margin: 12px 0
+    }
+
+    .kpi {
+      background: var(--in);
+      border-radius: 10px;
+      padding: 8px 10px
+    }
+
+    .kpi span {
+      font-size: 12px;
+      color: var(--mu);
+      display: block
+    }
+
+    .kpi b {
+      font-size: 18px
+    }
+
+    canvas {
+      width: 100%;
+      height: auto;
+      border-radius: 10px;
+      background: #070b16;
+      display: block
+    }
+
+    .subs {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+      gap: 8px;
+      margin-top: 12px
+    }
+
+    .sub {
+      text-align: left;
+      background: var(--in);
+      border: 1px solid var(--bd);
+      border-radius: 10px;
+      padding: 10px;
+      display: block;
+      width: 100%
+    }
+
+    .sub.off {
+      opacity: .45
+    }
+
+    .sub b {
+      display: flex;
+      justify-content: space-between
+    }
+
+    .sub small {
+      color: var(--mu);
+      display: block
+    }
+
+    .flow {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 6px;
+      align-items: stretch;
+      margin: 10px 0
+    }
+
+    @media(max-width:700px) {
+      .flow {
+        grid-template-columns: 1fr 1fr
+      }
+    }
+
+    .nd {
+      background: var(--in);
+      border: 1px solid var(--bd);
+      border-radius: 10px;
+      padding: 10px
+    }
+
+    .nd small {
+      color: var(--mu);
+      display: block
+    }
+
+    .nd b {
+      font-size: 19px
+    }
+
+    .nd.hot {
+      border-color: var(--sun)
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px
+    }
+
+    td,
+    th {
+      padding: 5px 4px;
+      border-bottom: 1px solid var(--bd);
+      text-align: left
+    }
+
+    th {
+      color: var(--mu);
+      font-weight: 500
+    }
+
+    .bar {
+      height: 8px;
+      background: var(--bd);
+      border-radius: 4px;
+      overflow: hidden;
+      min-width: 60px
+    }
+
+    .bar i {
+      display: block;
+      height: 100%;
+      background: var(--bad)
+    }
+
+    .g2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px
+    }
+
+    @media(max-width:860px) {
+      .g2 {
+        grid-template-columns: 1fr
+      }
+    }
+
+    .verdict {
+      padding: 10px 12px;
+      border-left: 4px solid var(--ok);
+      background: var(--in);
+      border-radius: 6px;
+      margin-top: 10px
+    }
+
+    .verdict.bad {
+      border-color: var(--bad)
+    }
+
+    pre {
+      white-space: pre-wrap;
+      background: var(--in);
+      padding: 10px;
+      border-radius: 8px;
+      font-size: 13px;
+      margin: 0;
+      overflow-x: auto
+    }
+
+    .mu {
+      color: var(--mu);
+      font-size: 13px
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <h1>Vidyajyoti Satellite Simulator<small>3U CubeSat, low Earth orbit. Mission view first, then Electrical Power
+        System (EPS).</small></h1>
+    <nav role="tablist"><button role="tab" aria-selected="true" data-v="m">Mission overview</button><button role="tab"
+        aria-selected="false" data-v="e">EPS deep dive</button></nav>
+  </header>
+  <div class="app">
+    <aside>
+      <h2>Mission and EPS settings</h2>
+      <label>Altitude (km)<b id="o_h"></b></label><input id="h" type="range" min="400" max="800" value="550">
+      <label>Beta angle (°), 0 is longest eclipse<b id="o_b"></b></label><input id="b" type="range" min="0" max="75"
+        value="15">
+      <label>Time warp<b id="o_w"></b></label><input id="w" type="range" min="1" max="1000" value="150">
+      <label>Solar cell efficiency (%)<b id="o_eta"></b></label><input id="eta" type="range" min="20" max="34" step=".5"
+        value="29.5">
+      <label>Battery capacity (Wh)<b id="o_cap"></b></label><input id="cap" type="range" min="10" max="80" value="40">
+      <label>Comms transmit duty (%)<b id="o_du"></b></label><input id="du" type="range" min="0" max="100" value="10">
+      <label>Operating mode</label>
+      <select id="mode" style="width:100%">
+        <option value="nom">Nominal</option>
+        <option value="pay">Payload burst (4.5 W)</option>
+        <option value="safe">Safe mode (forced)</option>
+      </select>
+      <label style="margin-top:12px;color:var(--tx)"><input id="wing" type="checkbox"> Add 2 sun-tracking wings (0.04
+        m²)</label>
+      <div class="row"><button id="pp">Pause</button><button id="rs">Reset</button></div>
+      <p class="mu">Click a subsystem card to switch it off. Below 20% charge the satellite enters safe mode on its own
+        and returns at 50%.</p>
+    </aside>
+    <main>
+      <section class="v on box" id="v_m">
+        <div class="kpis" id="k_m"></div>
+        <canvas id="oc" width="720" height="400"></canvas>
+        <p class="mu">Orbit plane seen from above. Sun is to the right. Orbit size is exaggerated, not to scale. Amber
+          arc is sunlight, dark arc is Earth’s shadow.</p>
+        <h2 style="margin-top:12px">Subsystems</h2>
+        <div class="subs" id="subs"></div>
+      </section>
+      <section class="v box" id="v_e">
+        <div class="kpis" id="k_e"></div>
+        <div class="flow">
+          <div class="nd" id="n1"></div>
+          <div class="nd" id="n2"></div>
+          <div class="nd" id="n3"></div>
+          <div class="nd" id="n4"></div>
+        </div>
+        <canvas id="ch" width="760" height="270"></canvas>
+        <p class="mu">Last 3 orbits. Amber is solar power, coral is load, green is battery charge. Shaded bands are
+          eclipse.</p>
+        <div class="g2" style="margin-top:12px">
+          <div>
+            <h2>Power budget (live)</h2>
+            <table id="tb"></table>
+            <div class="verdict" id="vd"></div>
+          </div>
+          <div>
+            <h2>Equations in use</h2>
+            <pre>P_solar = G · η · PF · η_mppt · Σ(Aᵢ · cos θᵢ)
+G = 1361 W/m², PF = 0.85, η_mppt = 0.95
+T = 2π √(a³ / μ),  μ = 398600 km³/s²
+Eclipse if r·ŝ &lt; 0 and |r − (r·ŝ)ŝ| &lt; R_E
+E_batt(t+dt) = E + (P_gen − P_load)·dt · η_chg
+η_chg = η_dis = 0.95,  DoD = 1 − SoC</pre>
+            <p class="mu">Attitude is nadir-pointing. Six body faces: four sides of 0.03 m² and two ends of 0.01 m².
+              Orbit-average margin = (P_gen − P_load) / P_load over one full orbit.</p>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+  <script>
+    const $ = i => document.getElementById(i), MU = 398600.4418, RE = 6371, G = 1361, PF = .85, MP = .95, CE = .95, TAU = 2 * Math.PI;
+    const SUB = [{k: 'eps', n: 'EPS', d: 'Generation, storage, distribution', f: 1}, {k: 'obc', n: 'OBC', d: 'Flight computer and housekeeping', f: 1}, {k: 'com', n: 'COMMS', d: 'UHF/S-band radio link'}, {k: 'adcs', n: 'ADCS', d: 'Attitude sensors and actuators'}, {k: 'pay', n: 'Payload', d: 'Mission instrument'}, {k: 'thm', n: 'Thermal', d: 'Heaters and temperature sensors'}];
+    SUB.forEach(s => s.on = true);
+    let st, run = true, tab = 'm';
+    function init() {st = {t: 0, th: 0, soc: .85, safe: false, hist: [], lh: -99, n: 0, o: {g: 0, l: 0, e: 0, tt: 0}, last: null, cur: {}}} init();
+    const P = () => ({h: +$('h').value, b: +$('b').value * Math.PI / 180, w: +$('w').value, eta: +$('eta').value / 100, cap: +$('cap').value, du: +$('du').value / 100, wing: $('wing').checked, mode: $('mode').value});
+    const per = h => TAU * Math.sqrt(Math.pow(RE + h, 3) / MU);
+    function loads(p, ecl, safe) {const L = {eps: .25, obc: .6, com: safe ? .5 : .5 + 3.5 * p.du, adcs: safe ? .3 : 1.4, pay: safe ? 0 : (p.mode === 'pay' ? 4.5 : 2.2), thm: ecl ? 1.2 : .3}; let t = 0; for (const s of SUB) {if (!(s.on || s.f)) L[s.k] = 0; t += L[s.k]} return {L, t}}
+    function step(dt, p) {
+      st.th += TAU * dt / per(p.h); st.t += dt;
+      const c = Math.cos(st.th), s = Math.sin(st.th), cb = Math.cos(p.b), sb = Math.sin(p.b), Rs = RE + p.h, dot = Rs * c * cb;
+      const ecl = dot < 0 && Math.sqrt(Math.max(0, Rs * Rs - dot * dot)) < RE;
+      const area = .03 * Math.abs(cb * c) + .03 * Math.abs(cb * s) + .01 * Math.abs(sb) + (p.wing ? .04 : 0);
+      const raw = G * p.eta * PF * area, gen = ecl ? 0 : raw * MP;
+      if (st.soc < .2) st.safe = true; else if (st.soc > .5) st.safe = false;
+      const sf = st.safe || p.mode === 'safe', {L, t: ld} = loads(p, ecl, sf);
+      let E = st.soc * p.cap, net = gen - ld, sh = 0, br = false;
+      if (net > 0) {const d = net * dt / 3600 * CE; if (E + d > p.cap) {sh = (E + d - p.cap) / CE * 3600 / dt; E = p.cap} else E += d} else E += net * dt / 3600 / CE;
+      if (E <= 0) {E = 0; br = true} st.soc = E / p.cap;
+      const V = 6.2 + 2.2 * st.soc, Pb = br ? 0 : net - sh;
+      st.cur = {gen, raw, ld, L, ecl, Pb, sh, br, sf, V, I: Pb / V, area};
+      const o = st.o; o.g += gen * dt; o.l += ld * dt; o.e += ecl ? dt : 0; o.tt += dt;
+      const n = Math.floor(st.th / TAU); if (n > st.n) {st.last = {g: o.g / o.tt, l: o.l / o.tt, e: o.e, min: Math.min(...st.hist.slice(-Math.ceil(per(p.h) / 20)).map(h => h.soc), st.soc)}; st.o = {g: 0, l: 0, e: 0, tt: 0}; st.n = n}
+      if (st.t - st.lh >= 20) {st.lh = st.t; st.hist.push({t: st.t, gen, ld, soc: st.soc, ecl}); if (st.hist.length > 1100) st.hist.shift()}
+    }
+    const stars = Array.from({length: 70}, (_, i) => [(i * 97 % 720), (i * 53 % 400), (i % 3) * .5 + .5]);
+    function eclFrac(p) {const a = Math.sqrt(1 - Math.pow(RE / (RE + p.h), 2)) / Math.cos(p.b); return a <= 1 ? Math.acos(a) / Math.PI : 0}
+    function drawOrbit(p) {
+      const c = $('oc'), x = c.getContext('2d'), W = c.width, H = c.height, cx = W / 2 - 20, cy = H / 2, er = 68, or = 105 + (p.h - 400) / 12;
+      x.fillStyle = '#070b16'; x.fillRect(0, 0, W, H); x.fillStyle = '#8e9ab8'; stars.forEach(s => x.fillRect(s[0], s[1], s[2], s[2]));
+      x.fillStyle = 'rgba(0,0,0,.55)'; x.fillRect(0, cy - er, cx, er * 2);
+      x.fillStyle = '#f5b83d'; x.beginPath(); x.arc(W - 45, cy, 22, 0, TAU); x.fill();
+      x.strokeStyle = 'rgba(245,184,61,.5)'; x.lineWidth = 2;[-30, 0, 30].forEach(d => {x.beginPath(); x.moveTo(W - 85, cy + d); x.lineTo(cx + or + 40, cy + d); x.stroke()});
+      x.fillStyle = '#1d5fd1'; x.beginPath(); x.arc(cx, cy, er, 0, TAU); x.fill();
+      x.save(); x.beginPath(); x.arc(cx, cy, er, 0, TAU); x.clip(); x.fillStyle = 'rgba(2,6,25,.65)'; x.fillRect(cx - er, cy - er, er, er * 2); x.restore();
+      const cb = Math.cos(p.b), Rs = RE + p.h; x.lineWidth = 3;
+      for (let i = 0; i < 180; i++) {
+        const a = i / 180 * TAU, a2 = (i + 1) / 180 * TAU, cc = Math.cos(a), d = Rs * cc * cb, e = d < 0 && Math.sqrt(Math.max(0, Rs * Rs - d * d)) < RE;
+        x.strokeStyle = e ? '#3b4568' : '#f5b83d'; x.beginPath(); x.arc(cx, cy, or, -a, -a2, true); x.stroke()
+      }
+      const sx = cx + or * Math.cos(st.th), sy = cy - or * Math.sin(st.th), e = st.cur.ecl;
+      x.save(); x.translate(sx, sy); x.fillStyle = e ? '#6f7ba0' : '#e8edfb'; x.fillRect(-6, -6, 12, 12);
+      x.fillStyle = e ? '#2b3a66' : '#3da2ff'; x.fillRect(-20, -3, 12, 6); x.fillRect(8, -3, 12, 6); if (p.wing) {x.fillRect(-20, -12, 12, 6); x.fillRect(8, 6, 12, 6)} x.restore();
+      x.fillStyle = '#e8edfb'; x.font = '13px system-ui'; x.fillText('Earth', cx - 17, cy + 4); x.fillText('Sun', W - 58, cy + 44);
+      x.fillText(e ? 'In eclipse' : 'In sunlight', sx + 16, sy - 10);
+    }
+    const f1 = v => v.toFixed(1), f2 = v => v.toFixed(2), mm = s => f1(s / 60) + ' min';
+    function kpi(id, a) {$(id).innerHTML = a.map(([l, v]) => `<div class="kpi"><span>${l}</span><b>${v}</b></div>`).join('')}
+    function drawChart(p) {
+      const c = $('ch'), x = c.getContext('2d'), W = c.width, H = c.height, m = 34, T = per(p.h), t1 = Math.max(st.t, T * 3), t0 = t1 - 3 * T, mx = Math.max(12, ...st.hist.map(h => h.gen)) * 1.1;
+      x.fillStyle = '#070b16'; x.fillRect(0, 0, W, H); const X = t => m + (t - t0) / (t1 - t0) * (W - 2 * m), Y = v => H - m - v / mx * (H - 2 * m), Ys = v => H - m - v * (H - 2 * m);
+      x.strokeStyle = '#222d4d'; x.fillStyle = '#8e9ab8'; x.font = '12px system-ui'; x.lineWidth = 1;
+      for (let i = 0; i <= 4; i++) {const v = mx * i / 4; x.beginPath(); x.moveTo(m, Y(v)); x.lineTo(W - m, Y(v)); x.stroke(); x.fillText(v.toFixed(0) + ' W', 2, Y(v) + 4); x.fillText(i * 25 + '%', W - m + 3, Ys(i / 4) + 4)}
+      const h = st.hist.filter(q => q.t >= t0); x.fillStyle = 'rgba(70,82,130,.35)';
+      h.forEach((q, i) => {if (q.ecl) {const a = X(q.t), b = i + 1 < h.length ? X(h[i + 1].t) : a + 2; x.fillRect(a, m / 2, b - a + 1, H - m * 1.5)} });
+      const ln = (col, f) => {x.strokeStyle = col; x.lineWidth = 2; x.beginPath(); h.forEach((q, i) => {const px = X(q.t), py = f(q); i ? x.lineTo(px, py) : x.moveTo(px, py)}); x.stroke()};
+      ln('#f5b83d', q => Y(q.gen)); ln('#ff6b5e', q => Y(q.ld)); ln('#3ddc97', q => Ys(q.soc));
+      x.fillStyle = '#8e9ab8'; x.fillText('time →  (3 orbits, ' + mm(3 * T) + ')', W / 2 - 60, H - 8);
+    }
+    function ui(p) {
+      const T = per(p.h), c = st.cur, S = SUB; if (!c.L) return; const ef = eclFrac(p);
+      const stat = c.br ? 'BROWNOUT' : c.sf ? 'SAFE MODE' : c.ecl ? 'Eclipse' : 'Nominal';
+      if (tab === 'm') {
+        kpi('k_m', [['Mission time', Math.floor(st.t / 3600) + ' h ' + Math.floor(st.t % 3600 / 60) + ' m'], ['Orbit', st.n + 1], ['Period', mm(T)], ['Speed', f2(Math.sqrt(MU / (RE + p.h))) + ' km/s'], ['Eclipse per orbit', mm(ef * T)], ['Status', stat], ['Battery', Math.round(st.soc * 100) + '%']]); drawOrbit(p);
+        S.forEach(s => {const el = $('s_' + s.k); el.className = 'sub' + ((s.on || s.f) ? '' : ' off'); el.querySelector('i').textContent = f2(c.L[s.k]) + ' W'});
+      }
+      else {
+        kpi('k_e', [['Solar output', f2(c.gen) + ' W'], ['Total load', f2(c.ld) + ' W'], ['Battery charge', f1(st.soc * 100) + '%'], ['Battery voltage', f2(c.V) + ' V'], ['Depth of discharge', f1((1 - st.soc) * 100) + '%'], ['Status', stat]]);
+        $('n1').className = 'nd' + (c.gen > 0 ? ' hot' : ''); $('n1').innerHTML = `<small>Solar array</small><b>${f2(c.raw)} W</b><small>${(c.area * 1e4).toFixed(0)} cm² effective, ${c.ecl ? 'dark' : 'lit'}</small>`;
+        $('n2').innerHTML = `<small>MPPT converter</small><b>${f2(c.gen)} W</b><small>95% efficient</small>`;
+        $('n3').innerHTML = `<small>Regulated bus</small><b>${f2(c.ld)} W</b><small>3.3 V and 5 V rails</small>`;
+        const dir = c.sh > 0 ? 'FULL, shunting ' + f2(c.sh) + ' W' : c.Pb > 0 ? 'charging' : 'discharging';
+        $('n4').innerHTML = `<small>Li-ion 2S pack, ${p.cap} Wh</small><b>${f2(c.Pb)} W</b><small>${dir}, ${f2(c.I)} A</small>`;
+        drawChart(p);
+        const tot = c.ld || 1; $('tb').innerHTML = '<tr><th>Subsystem</th><th>Power</th><th>Share</th></tr>' + S.map(s => `<tr><td>${s.n}</td><td>${f2(c.L[s.k])} W</td><td><div class="bar"><i style="width:${c.L[s.k] / tot * 100}%"></i></div></td></tr>`).join('') + `<tr><td><b>Load total</b></td><td><b>${f2(c.ld)} W</b></td><td></td></tr>`;
+        const l = st.last; let vd = 'Run one full orbit to see the orbit-average energy balance.', bad = false;
+        if (l) {const mg = (l.g - l.l) / l.l * 100; bad = mg < 0 || l.min < .5; vd = `Last orbit: generated ${f2(l.g)} W average, consumed ${f2(l.l)} W average, margin ${mg >= 0 ? '+' : ''}${f1(mg)}%. Lowest charge ${f1(l.min * 100)}% (depth of discharge ${f1((1 - l.min) * 100)}%). ` + (mg < 0 ? 'Energy-negative: the battery will drain orbit after orbit. Add wings, raise efficiency, or shed loads.' : l.min < .5 ? 'Energy-positive, but deep cycling shortens battery life. Aim for depth of discharge under 30% in LEO.' : 'Energy-positive with healthy battery cycling.')}
+        $('vd').className = 'verdict' + (bad ? ' bad' : ''); $('vd').textContent = vd;
+      }
+    }
+    let prev = performance.now();
+    function loop(now) {
+      const dt = Math.min(.1, (now - prev) / 1000); prev = now; const p = P();
+      if (run) {let r = dt * p.w; while (r > 0) {const d = Math.min(10, r); step(d, p); r -= d} } else if (!st.cur.L) step(.01, p);
+      ui(p); requestAnimationFrame(loop)
+    }
+    ['h', 'b', 'w', 'eta', 'cap', 'du'].forEach(i => {const f = () => $('o_' + i).textContent = $(i).value + (i === 'w' ? '×' : ''); $(i).oninput = f; f()});
+    $('subs').innerHTML = SUB.map(s => `<button class="sub" id="s_${s.k}"><b>${s.n}<i style="font-style:normal"></i></b><small>${s.d}${s.f ? ' (always on)' : ''}</small></button>`).join('');
+    SUB.forEach(s => {$('s_' + s.k).onclick = () => {if (!s.f) s.on = !s.on}});
+    document.querySelectorAll('nav button').forEach(b => b.onclick = () => {tab = b.dataset.v; document.querySelectorAll('nav button').forEach(x => x.setAttribute('aria-selected', x === b)); $('v_m').classList.toggle('on', tab === 'm'); $('v_e').classList.toggle('on', tab === 'e')});
+    $('pp').onclick = () => {run = !run; $('pp').textContent = run ? 'Pause' : 'Resume'};
+    $('rs').onclick = () => {init(); SUB.forEach(s => s.on = true)};
+    requestAnimationFrame(loop);
+  </script>
+</body>
+
+</html>
